@@ -1,0 +1,13 @@
+from os.path import join
+
+DB_URL = "bolt://localhost:7687"
+USERNAME = "neo4j"
+PASSWORD = "-"
+DB = "db50"
+DATA_FOLDER = "data"
+DATA_FOLDER_50_MB = join(DATA_FOLDER, '50_mb')
+DATA_FOLDER_100_MB = join(DATA_FOLDER, '100_mb')
+DATA_FOLDER_200_MB = join(DATA_FOLDER, '200_mb')
+WRITE_TX_CHUNK_SIZE = 20000
+UPDATE_TX_CHUNK_SIZE = 10000
+

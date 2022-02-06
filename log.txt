@@ -1,0 +1,24 @@
+func: clear_db ===> took: 0.1110 sec
+Total transactions:  863006
+func: _create_customers ===> took: 10.3581 sec
+func: _create_terminals ===> took: 10.3042 sec
+func: _create_indexes ===> took: 0.0585 sec
+func: _create_transactions ===> took: 3.8598 sec
+func: create_db ===> took: 1105.4338 sec
+
+===============================================================================================================
+
+add products done.
+func: add_products ===> took: 15.7016 sec
+func: update_db ===> took: 15.7016 sec
+(venv) ➜  fraud_detection python3 updater.py
+0 rows updated...
+adding products done.
+func: add_products ===> took: 0.1591 sec
+
+adding periods done.
+func: add_periods ===> took: 15.9611 sec
+func: update_db ===> took: 16.1203 sec
+
+=================================================================================================
+
