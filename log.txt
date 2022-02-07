@@ -1,3 +1,12 @@
+INFO: Pandarallel will run on 4 workers.
+INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+Time to generate customer profiles table: 0.057s
+Time to generate terminal profiles table: 0.06s
+Time to associate terminals to customers: 2.59s
+Time to generate transactions: 85.988s
+Time to add frauds: 4.996s
+Number of frauds from scenario 4: 17260
+================================================================================================
 func: clear_db ===> took: 0.1110 sec
 Total transactions:  863006
 func: _create_customers ===> took: 10.3581 sec
@@ -20,5 +29,25 @@ adding periods done.
 func: add_periods ===> took: 15.9611 sec
 func: update_db ===> took: 16.1203 sec
 
-=================================================================================================
+=========================100========================================================================
+INFO: Pandarallel will run on 4 workers.
+INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+Time to generate customer profiles table: 0.3s
+Time to generate terminal profiles table: 0.27s
+Time to associate terminals to customers: 15.04s
+Time to generate transactions: 360.902s
+Time to add frauds: 13.698s
+Number of frauds from scenario 4: 38815
 
+-------------------------------------------------------
+
+===========================200==========================================
+INFO: Pandarallel will run on 4 workers.
+INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+Time to generate customer profiles table: 0.11s
+Time to generate terminal profiles table: 0.09s
+Time to associate terminals to customers: 5.82s
+Time to generate transactions: 322.481s
+Time to add frauds: 34.120s
+Number of frauds from scenario 4: 58181
+--------------------------------------------------------------------

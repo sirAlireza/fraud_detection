@@ -58,7 +58,7 @@ class Loader:
             "RETURN c"
         )
         for index, row in c_df.iterrows():
-            tx.run(query, c_id=row['CUSTOMER_ID'])
+            tx.run(query, c_id=int(row['CUSTOMER_ID']))
 
     @timeit
     def _create_terminals(self, tx, t_df):
@@ -67,7 +67,7 @@ class Loader:
             "RETURN t"
         )
         for index, row in t_df.iterrows():
-            tx.run(query, t_id=row['TERMINAL_ID'])
+            tx.run(query, t_id=int(row['TERMINAL_ID']))
 
     @timeit
     def _create_indexes(self):
@@ -95,8 +95,8 @@ class Loader:
                   "RETURN c,tx,t")
         for index, row in tx_df.iterrows():
             db_tx.run(query3,
-                      c_id=row["CUSTOMER_ID"], t_id=row["TERMINAL_ID"],
-                      tx_id=row['TRANSACTION_ID'], tx_amount=row['TX_AMOUNT'],
+                      c_id=int(row["CUSTOMER_ID"]), t_id=int(row["TERMINAL_ID"]),
+                      tx_id=int(row['TRANSACTION_ID']), tx_amount=row['TX_AMOUNT'],
                       tx_date=row["TX_DATE"], tx_fraud=row['TX_FRAUD'])
 
     @timeit
@@ -137,7 +137,7 @@ def main():
     transactions_df = pd.read_csv(join(DATA_FOLDER, 'transactions.csv'))
 
     Loader.enable_log(logging.INFO, stdout)
-    loader = Loader(settings.DB_URL, settings.USERNAME, settings.PASSWORD, settings.DB)
+    loader = Loader(settings.DB_URL, settings.USERNAME, settings.PASSWORD, settings.WORKING_DB)
     # clears the database before start
     loader.clear_db()
     loader.create_db(customers_df, terminals_df, transactions_df)

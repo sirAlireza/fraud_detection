@@ -111,7 +111,7 @@ def main():
     """This function updates all generated data by adding products, periods and buying friends relationship."""
 
     Updater.enable_log(logging.INFO, stdout)
-    updater = Updater(settings.DB_URL, settings.USERNAME, settings.PASSWORD, settings.DB)
+    updater = Updater(settings.DB_URL, settings.USERNAME, settings.PASSWORD, settings.WORKING_DB)
     updater.update_db()
     updater.close()
 

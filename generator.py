@@ -11,14 +11,14 @@ from pandarallel import pandarallel
 
 import settings
 
-DIR_OUTPUT = settings.DATA_FOLDER_50_MB
+DIR_OUTPUT = settings.DATA_FOLDER_100_MB
 
 
 def main():
     (customer_profiles_table, terminal_profiles_table, transactions_df) = \
-        generate_dataset(n_customers=5000,
-                         n_terminals=10000,
-                         nb_days=90,
+        generate_dataset(n_customers=10000,
+                         n_terminals=15000,
+                         nb_days=100,
                          start_date="2019-04-01",
                          r=5)
     frauds_percent = 2
@@ -182,7 +182,7 @@ def generate_dataset(n_customers=10000, n_terminals=1000000, nb_days=90, start_d
 
     start_time = time.time()
     transactions_df = customer_profiles_table.groupby('CUSTOMER_ID').apply(
-        lambda x: generate_transactions_table(x.iloc[0], nb_days=nb_days)).reset_index(drop=True)
+        lambda x: generate_transactions_table(x.iloc[0], start_date=start_date, nb_days=nb_days)).reset_index(drop=True)
     # With Pandarallel
     # transactions_df = customer_profiles_table.groupby('CUSTOMER_ID').parallel_apply(
     #     lambda x: generate_transactions_table(x.iloc[0], nb_days=nb_days)).reset_index(drop=True)
