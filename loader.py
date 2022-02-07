@@ -72,11 +72,11 @@ class Loader:
     @timeit
     def _create_indexes(self):
         query1 = (
-            "CREATE INDEX FOR (c:Customer)"
+            "CREATE INDEX IF NOT EXISTS FOR (c:Customer)"
             "ON (c.id)"
         )
         query2 = (
-            "CREATE INDEX FOR (t:Terminal)"
+            "CREATE INDEX IF NOT EXISTS FOR (t:Terminal)"
             "ON (t.id)"
         )
         with self.driver.session() as session:
@@ -89,7 +89,7 @@ class Loader:
                   "(c:Customer), "
                   "(t:Terminal) "
                   "WHERE c.id = $c_id AND t.id = $t_id "
-                  "CREATE (tx:Transaction { id: $tx_id, amount: $tx_amount, datetime: $tx_datetime, "
+                  "CREATE (tx:Transaction { id: $tx_id, amount: $tx_amount, date: $tx_date, "
                   "is_fraud: $tx_fraud }) "
                   "CREATE (c)-[r1:HAS_TX]->(tx)-[r2:PAYED_TO]->(t) "
                   "RETURN c,tx,t")
@@ -97,19 +97,36 @@ class Loader:
             db_tx.run(query3,
                       c_id=row["CUSTOMER_ID"], t_id=row["TERMINAL_ID"],
                       tx_id=row['TRANSACTION_ID'], tx_amount=row['TX_AMOUNT'],
-                      tx_datetime=row["TX_DATETIME"], tx_fraud=row['TX_FRAUD'])
+                      tx_date=row["TX_DATE"], tx_fraud=row['TX_FRAUD'])
 
     @timeit
     def clear_db(self):
         query1 = (
-            "match (a) -[r] -> () delete a, r"
+            "match (a)-[r]->() with r as r, a as a limit $limit delete r return count(a)"
         )
         query2 = (
-            "match (a) delete a"
+            "match (a) with a as a limit $limit delete a return count(a)"
         )
         with self.driver.session() as session:
-            session.run(query1)
-            session.run(query2)
+            chunk_size = settings.DELETE_TX_CHUNK_SIZE
+            count_rows = chunk_size
+            total_deleted_rows = 0
+            while count_rows == chunk_size:
+                deleted_rows = session.run(query1,
+                                            limit=chunk_size)
+                count_rows = int(deleted_rows.single()[0])
+                total_deleted_rows += count_rows
+                print(f'{total_deleted_rows} rows deleted...', end='\r')
+            
+            count_rows = chunk_size
+            total_deleted_rows = 0
+            while count_rows == chunk_size:
+                deleted_rows = session.run(query2,
+                                            limit=chunk_size)
+                count_rows = int(deleted_rows.single()[0])
+                total_deleted_rows += count_rows
+                print(f'{total_deleted_rows} rows deleted...', end='\r')
+
 
 
 def main():
@@ -122,7 +139,7 @@ def main():
     Loader.enable_log(logging.INFO, stdout)
     loader = Loader(settings.DB_URL, settings.USERNAME, settings.PASSWORD, settings.DB)
     # clears the database before start
-    # app.clear_db()
+    loader.clear_db()
     loader.create_db(customers_df, terminals_df, transactions_df)
     loader.close()
 

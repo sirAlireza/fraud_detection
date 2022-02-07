@@ -1,6 +1,0 @@
-MATCH (c:Customer)-[:HAS_TX]->(tx:Transaction {tx_product:"clothing"})-[:PAYED_TO]->(t:Terminal)
-with c as c, t as t, count(tx) as c_tx
-where c_tx > 7
-MERGE (c)-[r:BUYING_FRIENDS]-(t)
-SET r.products = ['food'] + coalesce(r.products, [])
-return c,r,t limit 25

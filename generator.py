@@ -17,9 +17,9 @@ DIR_OUTPUT = settings.DATA_FOLDER_50_MB
 def main():
     (customer_profiles_table, terminal_profiles_table, transactions_df) = \
         generate_dataset(n_customers=5000,
-                         n_terminals=8000,
+                         n_terminals=10000,
                          nb_days=90,
-                         start_date="2018-04-01",
+                         start_date="2019-04-01",
                          r=5)
     frauds_percent = 2
     frauds_number = int(transactions_df.count().values[0] / 100 * frauds_percent)
@@ -150,8 +150,9 @@ def generate_transactions_table(customer_profile, start_date="2018-04-01", nb_da
     if len(customer_transactions) > 0:
         customer_transactions['TX_DATETIME'] = pd.to_datetime(customer_transactions["TX_TIME_SECONDS"], unit='s',
                                                               origin=start_date)
+        customer_transactions['TX_DATE'] = customer_transactions['TX_DATETIME'].dt.date
         customer_transactions = customer_transactions[
-            ['TX_DATETIME', 'CUSTOMER_ID', 'TERMINAL_ID', 'TX_AMOUNT', 'TX_TIME_SECONDS', 'TX_TIME_DAYS']]
+            ['TX_DATETIME','TX_DATE', 'CUSTOMER_ID', 'TERMINAL_ID', 'TX_AMOUNT', 'TX_TIME_SECONDS', 'TX_TIME_DAYS']]
 
     return customer_transactions
 
