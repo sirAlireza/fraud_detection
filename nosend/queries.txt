@@ -1,0 +1,17 @@
+QUERY WITH POLYNOMIAL TIME FOR THE SECOND REQUEST:
+
+MATCH (t1:Terminal)<-[:PAYED_TO]-(tx1:Transaction) 
+WITH DISTINCT date(tx1.date) AS dt,t1,tx1
+MATCH (t2:Terminal)<-[:PAYED_TO]-(tx2:Transaction) 
+WHERE tx2.date > date(dt) - Duration({days: 30}) AND tx2.date < date(dt) 
+WITH t1,tx1, avg(tx2.amount) as avg_, dt
+MATCH (t3:Terminal)<-[:PAYED_TO]-(tx3:Transaction) WHERE tx3.date = dt AND (avg_+(avg_/2)) < tx3.amount RETURN t3,count(tx3),avg_ LIMIT 10
+-----------------------------------------------------------------
+QUERY WITH POLYNOMIAL TIME FOR THE LAST REQUEST:
+
+MATCH (t1:Terminal)<-[:PAYED_TO]-(tx1:Transaction) 
+WITH DISTINCT date(tx1.date) AS dt,t1,tx1
+MATCH (t2:Terminal)<-[:PAYED_TO]-(tx2:Transaction) 
+WHERE tx2.date > date(dt) - Duration({days: 30}) AND tx2.date < date(dt) 
+WITH t1,tx1, avg(tx2.amount) as avg_, dt
+MATCH (tx3:Transaction) WHERE tx3.date = dt AND (avg_+(avg_/2)) < tx3.amount WITH tx.tx_period as p RETURN p, count(tx3),avg_ LIMIT 10

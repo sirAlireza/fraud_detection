@@ -1,53 +1,79 @@
-INFO: Pandarallel will run on 4 workers.
-INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+ALL TIMES MEASURED DURING THE DIFFERENT OPERATIONS ARE PLACED HERE.
+============================FIRST DATASET=========================
+GENERATE DATASET:
 Time to generate customer profiles table: 0.057s
 Time to generate terminal profiles table: 0.06s
 Time to associate terminals to customers: 2.59s
 Time to generate transactions: 85.988s
 Time to add frauds: 4.996s
-Number of frauds from scenario 4: 17260
-================================================================================================
+-------------------------------------------------------------------
+CREATE NODE AND RELATIONSHIPS:
 func: clear_db ===> took: 0.1110 sec
-Total transactions:  863006
 func: _create_customers ===> took: 10.3581 sec
 func: _create_terminals ===> took: 10.3042 sec
 func: _create_indexes ===> took: 0.0585 sec
 func: _create_transactions ===> took: 3.8598 sec
 func: create_db ===> took: 1105.4338 sec
-
-===============================================================================================================
-
-add products done.
-func: add_products ===> took: 15.7016 sec
-func: update_db ===> took: 15.7016 sec
-(venv) ➜  fraud_detection python3 updater.py
-0 rows updated...
-adding products done.
+-------------------------------------------------------------------
+UPDATING THE DATABASE WITH RANDOM VALUES:
 func: add_products ===> took: 0.1591 sec
-
-adding periods done.
 func: add_periods ===> took: 15.9611 sec
 func: update_db ===> took: 16.1203 sec
-
-=========================100========================================================================
-INFO: Pandarallel will run on 4 workers.
-INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+-------------------------------------------------------------------
+QUERIES TIMINGS AND RESULT SAMPLE(just 1 row):
+Result of customer daily payments:
+<Record c=<Node id=891005 labels=frozenset({'Customer'}) properties={'id': 0}> sum(tx.amount)=170.07 tx.date='2018-06-11'>
+func: query_customer_payments ===> took: 0.3273 sec
+Result of terminal fraud transactions:
+<Record t=<Node id=896015 labels=frozenset({'Terminal'}) properties={'id': 10.0}> count(tx)=3 avg_tx=58.2655>
+func: query_terminal_fraud_transactions ===> took: 0.5762 sec
+Result of Co-Customer relationship with degree 4:
+<Record c1=<Node id=891005 labels=frozenset({'Customer'}) properties={'id': 0}> c2=<Node id=895890 labels=frozenset({'Customer'}) properties={'id': 4885}>>
+func: query_cc_relationship_with_degree ===> took: 0.0415 sec
+Result of transactions and fraud transactions for each period:
+<Record p='evening' ctx=28065 count(tx)=220000>
+func: query_transactions_of_each_period ===> took: 10.8550 sec
+============================SECOND DATASET=============================
+GENERATE DATASET:
 Time to generate customer profiles table: 0.3s
 Time to generate terminal profiles table: 0.27s
 Time to associate terminals to customers: 15.04s
-Time to generate transactions: 360.902s
+Time to generate transactions: 306.902s
 Time to add frauds: 13.698s
-Number of frauds from scenario 4: 38815
-
--------------------------------------------------------
-
-===========================200==========================================
-INFO: Pandarallel will run on 4 workers.
-INFO: Pandarallel will use Memory file system to transfer data between the main process and workers.
+-------------------------------------------------------------------
+CREATE NODE AND RELATIONSHIPS:
+func: create_db ===> took: 2161.9731 sec
+-------------------------------------------------------------------
+UPDATING THE DATABASE WITH RANDOM VALUES:
+func: add_products ===> took: 64.4499 sec
+func: add_periods ===> took: 75.4701 sec
+func: add_buying_friends_relations ===> took: 3.2203 sec
+func: update_db ===> took: 143.1404 sec
+-------------------------------------------------------------------
+QUERIES TIMINGS:
+func: query_customer_payments ===> took: 2.7791 sec
+func: query_terminal_fraud_transactions ===> took: 10.8474 sec
+func: query_cc_relationship_with_degree ===> took: 0.0075 sec
+func: query_transactions_of_each_period ===> took: 11.8972 sec
+============================THIRD DATASET============================
+GENERATE DATASET:
 Time to generate customer profiles table: 0.11s
 Time to generate terminal profiles table: 0.09s
 Time to associate terminals to customers: 5.82s
 Time to generate transactions: 322.481s
 Time to add frauds: 34.120s
-Number of frauds from scenario 4: 58181
---------------------------------------------------------------------
+-------------------------------------------------------------------
+CREATE NODE AND RELATIONSHIPS:
+func: create_db ===> took: 3230.2272 sec
+-------------------------------------------------------------------
+UPDATING THE DATABASE WITH RANDOM VALUES:
+func: add_products ===> took: 123.4303 sec
+func: add_periods ===> took: 136.3523 sec
+func: add_buying_friends_relations ===> took: 5.0019 sec
+func: update_db ===> took: 264.7846 sec
+-------------------------------------------------------------------
+QUERIES TIMINGS:
+func: query_customer_payments ===> took: 8.7879 sec
+func: query_terminal_fraud_transactions ===> took: 21.0399 sec
+func: query_cc_relationship_with_degree ===> took: 0.0300 sec
+func: query_transactions_of_each_period ===> took: 21.7939 sec

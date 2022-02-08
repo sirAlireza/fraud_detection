@@ -6,9 +6,6 @@ from neo4j import GraphDatabase
 import settings
 from timing import timeit
 
-PRODUCTS = ['high_tech', 'consumable', 'food', 'clothing', 'other']
-PERIODS = ['morning', 'afternoon', 'evening', 'night']
-
 
 class Handler:
 

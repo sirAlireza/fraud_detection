@@ -8,7 +8,7 @@ from neo4j import GraphDatabase
 import settings
 from timing import timeit
 
-DATA_FOLDER = settings.DATA_FOLDER_50_MB
+DATA_FOLDER = settings.LOADER_DATA_FOLDER
 
 
 class Loader:
@@ -113,25 +113,23 @@ class Loader:
             total_deleted_rows = 0
             while count_rows == chunk_size:
                 deleted_rows = session.run(query1,
-                                            limit=chunk_size)
+                                           limit=chunk_size)
                 count_rows = int(deleted_rows.single()[0])
                 total_deleted_rows += count_rows
                 print(f'{total_deleted_rows} rows deleted...', end='\r')
-            
+
             count_rows = chunk_size
             total_deleted_rows = 0
             while count_rows == chunk_size:
                 deleted_rows = session.run(query2,
-                                            limit=chunk_size)
+                                           limit=chunk_size)
                 count_rows = int(deleted_rows.single()[0])
                 total_deleted_rows += count_rows
                 print(f'{total_deleted_rows} rows deleted...', end='\r')
 
 
-
 def main():
     """This function loads all generated data by "generator.py" into NoSql database."""
-
     customers_df = pd.read_csv(join(DATA_FOLDER, 'customers.csv'))
     terminals_df = pd.read_csv(join(DATA_FOLDER, 'terminals.csv'))
     transactions_df = pd.read_csv(join(DATA_FOLDER, 'transactions.csv'))

@@ -1,0 +1,33 @@
+========================1===================================
+MATCH (c:Customer)-[r:HAS_TX]->(tx:Transaction) where tx.date > "2018-04-01" and tx.date < "2018-04-30" RETURN c, sum(tx.amount), tx.date order by c, tx.date limit 200
+
+========================2=================================
+
+MATCH (t:Terminal)<-[:PAYED_TO]-(tx:Transaction)<-[:HAS_TX]-(c:Customer) WHERE tx.date > "2018-05-01" AND tx.date < "2018-05-30" WITH t,avg(tx.amount) AS avg_tx, collect(tx) AS txs UNWIND txs AS tx WITH tx,t,avg_tx WHERE (avg_tx+(avg_tx/2)) < tx.amount RETURN t,count(t), avg_tx LIMIT 25
+-----------------------correct----------------------------------
+update date() if needed
++MATCH (t:Terminal)<-[:PAYED_TO]-(tx:Transaction) WHERE tx.date > "2018-05-01" AND tx.date < "2018-06-01" WITH t,avg(tx.amount) AS avg_tx MATCH (t:Terminal)<-[:PAYED_TO]-(tx:Transaction) WHERE tx.date > "2018-06-01" AND tx.date < "2018-07-01" AND (avg_tx+(avg_tx/2)) < tx.amount RETURN t,count(tx),avg_tx LIMIT 10
+------------------------not correct---------------------------------
+MATCH (t1:Terminal)<-[:PAYED_TO]-(tx1:Transaction) 
+WITH DISTINCT date(tx1.date) AS dt,t1,tx1
+MATCH (t2:Terminal)<-[:PAYED_TO]-(tx2:Transaction) 
+WHERE tx2.date > date(dt) - Duration({days: 30}) AND tx2.date < date(dt) 
+WITH t1,tx1, avg(tx2.amount) as avg_, dt
+MATCH (t3:Terminal)<-[:PAYED_TO]-(tx3:Transaction) WHERE tx3.date = dt AND (avg_+(avg_/2)) < tx3.amount RETURN t3,count(tx3),avg_ LIMIT 10
+==========================3==================================
+MATCH path=(c1:Customer)-[*20]-(c2:Customer) RETURN c1,c2,path LIMIT 250
+===========================4=================================
+part 1:
+MATCH (tx:Transaction) with tx.tx_period as p return p, count(p)
+part 2:
+update dates() if needed
+MATCH (t:Terminal)<-[:PAYED_TO]-(tx:Transaction) WHERE tx.date > "2018-05-01" AND tx.date < "2018-06-01" WITH t,avg(tx.amount) AS avg_tx MATCH (t:Terminal)<-[:PAYED_TO]-(tx:Transaction) WHERE tx.date > "2018-06-01" AND tx.date < "2018-07-01" AND (avg_tx+(avg_tx/2)) < tx.amount WITH tx.tx_period AS p, count(tx) AS ctx RETURN p,ctx  LIMIT 10
+
+----------------------not correct--------------------------------------------
+MATCH (t1:Terminal)<-[:PAYED_TO]-(tx1:Transaction) 
+WITH DISTINCT date(tx1.date) AS dt,t1,tx1
+MATCH (t2:Terminal)<-[:PAYED_TO]-(tx2:Transaction) 
+WHERE tx2.date > date(dt) - Duration({days: 30}) AND tx2.date < date(dt) 
+WITH t1,tx1, avg(tx2.amount) as avg_, dt
+MATCH (tx3:Transaction) WHERE tx3.date = dt AND (avg_+(avg_/2)) < tx3.amount WITH tx.tx_period as p RETURN p, count(tx3),avg_ LIMIT 10
+==========================================================================================
